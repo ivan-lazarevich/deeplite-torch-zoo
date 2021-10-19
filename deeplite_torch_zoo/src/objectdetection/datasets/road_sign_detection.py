@@ -1,33 +1,40 @@
 import os
 import random
+from math import floor
 from pathlib import Path
+from typing import List, Dict, Union
 
 import cv2
 import numpy as np
 import torch
-from typing import Any, Callable, List, Dict, Optional, Tuple, Union
-from deeplite_torch_zoo.src.objectdetection.yolov3.utils.data_augment import Resize, Mixup
+
+from deeplite_torch_zoo.src.objectdetection.yolov3.utils.data_augment import (
+    Mixup,
+    RandomAffine,
+    RandomCrop,
+    RandomHorizontalFilp,
+    Resize,
+)
 
 
 class RoadSignDetectionDataset:
     def __init__(self, root, split='train', num_classes=None, img_size=416):
-        """ Road sign detection dataset
-        """
+        """Road sign detection dataset in YOLO format"""
         self.root = Path(root)
         self.img_info: List[Dict[str, Union[str, Dict[str, torch.Tensor]]]] = []
         self.split = split
-        self.classes_set = set()
+        self.labels_set = set()
 
-        self._parse_annotations_file()
-        print(f"{len(self.img_info)}")
+        self._parse_annotation_files()
+        print(f"Number of samples in the '{split}' dataset split: {len(self.img_info)}")
 
-        self.num_classes = len(self.classes_set)
+        self.num_classes = len(self.labels_set)
         if num_classes is not None:
             self.num_classes = num_classes
-        print(f'number of classes {self.num_classes}')
+        print(f'Number of classes in the dataset: {self.num_classes}')
 
         self._img_size = img_size
-        
+
     def __getitem__(self, item):
         """
         return:
@@ -50,15 +57,28 @@ class RoadSignDetectionDataset:
     def __parse_annotation(self, _info):
         img_path = _info["img_path"].as_posix().replace('\n', '')
         img = cv2.imread(img_path)  # H*W*C and C=BGR
-        #assert img is not None, "File Not Found " + img_path
-        
-        if img is None:
-            raise RuntimeError(_info)
+        assert img is not None, "File Not Found " + img_path
 
         bboxes = np.array(_info["annotations"]["bbox"])
-        labels = np.array(_info["annotations"]["labels"])[:, np.newaxis]
 
+        bboxes = [
+            (
+                floor(x1 * img.shape[1]),
+                floor(y1 * img.shape[0]),
+                floor(x2 * img.shape[1]),
+                floor(y2 * img.shape[0]),
+            )
+            for (x1, y1, x2, y2) in bboxes
+        ]
+        labels = np.array(_info["annotations"]["labels"])[:, np.newaxis]
         bboxes = np.concatenate((bboxes, labels), axis=1)
+
+        if len(bboxes) == 0:
+            bboxes = np.array(np.zeros((0, 5)))
+        else:
+            img, bboxes = RandomHorizontalFilp()(np.copy(img), np.copy(bboxes))
+            img, bboxes = RandomCrop()(np.copy(img), np.copy(bboxes))
+            img, bboxes = RandomAffine()(np.copy(img), np.copy(bboxes))
 
         img, bboxes = Resize((self._img_size, self._img_size), True)(
             np.copy(img), np.copy(bboxes)
@@ -94,7 +114,7 @@ class RoadSignDetectionDataset:
     def __len__(self) -> int:
         return len(self.img_info)
 
-    def _parse_annotations_file(self) -> None:
+    def _parse_annotation_files(self) -> None:
         filename = self.split + '.txt'
         filepath = os.path.join(self.root, filename)
 
@@ -112,13 +132,22 @@ class RoadSignDetectionDataset:
                     labels, bboxes = [], []
                     for line in annotation:
                         label, *bbox_values = [float(v) for v in line.split()]
+                        x1, y1, dx, dy = bbox_values
+                        bbox_values = (
+                            x1 - 0.5 * dx,
+                            y1 - 0.5 * dy,
+                            x1 + 0.5 * dx,
+                            y1 + 0.5 * dy,
+                        )
                         labels.append(label)
-                        self.classes_set.add(label)
+                        self.labels_set.add(label)
                         bboxes.append(bbox_values)
-                    self.img_info.append({
-                        "img_path": img_path,
-                        "annotations": {
-                            "bbox": bboxes,
-                            "labels": labels,
-                            }  
-                        })
+                    self.img_info.append(
+                        {
+                            "img_path": img_path,
+                            "annotations": {
+                                "bbox": bboxes,
+                                "labels": labels,
+                            },
+                        }
+                    )

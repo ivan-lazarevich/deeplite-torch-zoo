@@ -3,9 +3,15 @@ from deeplite_torch_zoo.src.objectdetection.eval.coco.coco_evaluator import yolo
 from deeplite_torch_zoo.src.objectdetection.eval.lisa_eval import yolo_eval_lisa
 from deeplite_torch_zoo.src.objectdetection.eval.wider_face_eval import yolo_eval_wider_face
 from deeplite_torch_zoo.src.objectdetection.eval.voc.voc_evaluator import yolo_eval_voc
+from deeplite_torch_zoo.src.objectdetection.eval.road_sign_eval import yolo_eval_road_sign
 
 
-__all__ = ["get_eval_func", "yolo_eval_coco", "yolo_eval_voc", "yolo_eval_lisa", "yolo_eval_wider_face"]
+__all__ = ["get_eval_func", 
+           "yolo_eval_coco", 
+           "yolo_eval_voc", 
+           "yolo_eval_lisa", 
+           "yolo_eval_wider_face",
+           "yolo_eval_road_sign"]
 
 
 def get_eval_func(_set):
@@ -17,5 +23,7 @@ def get_eval_func(_set):
         return yolo_eval_lisa
     if 'wider_face' in _set:
         return yolo_eval_wider_face
+    if 'road_sign' in _set:
+        return yolo_eval_road_sign
 
     raise ValueError
