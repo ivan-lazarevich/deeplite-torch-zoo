@@ -8,6 +8,7 @@ def get_project_root() -> Path:
 
 
 __all__ = [
+    "yolo5",
     "yolo5_local",
     "yolo5s_voc_20",
     "yolo5m_voc_20",

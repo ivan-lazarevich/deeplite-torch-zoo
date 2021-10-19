@@ -12,7 +12,7 @@ import deeplite_torch_zoo.src.objectdetection.configs.hyp_config as hyp_cfg_scra
 
 import deeplite_torch_zoo.src.objectdetection.yolov3.utils.gpu as gpu
 from deeplite_torch_zoo.wrappers.wrapper import get_data_splits_by_name
-from deeplite_torch_zoo.wrappers.models import yolo3, yolo4, yolo4_lisa, yolo5
+from deeplite_torch_zoo.wrappers.models import yolo3, yolo4, yolo4_lisa, yolo5_local
 from deeplite_torch_zoo.wrappers.eval import get_eval_func
 from deeplite_torch_zoo.src.objectdetection.yolov3.model.loss.yolo_loss import \
     YoloV3Loss
@@ -28,7 +28,7 @@ class Trainer(object):
     def __init__(self, weight_path, resume, gpu_id):
         init_seeds(0)
 
-        assert opt.dataset_type in ["coco", "voc", "lisa", "lisa_full", "lisa_subset11", "wider_face"]
+        assert opt.dataset_type in ["coco", "voc", "lisa", "lisa_full", "lisa_subset11", "wider_face", "road_sign"]
         assert opt.net in ["yolov3", "yolov5s", "yolov5m", "yolov5l", "yolov5x", "yolov4s", "yolov4m", "yolov4l", "yolov4x"]
 
         self.hyp_config = hyp_cfg_scratch
@@ -86,10 +86,12 @@ class Trainer(object):
                 device=self.device,
             )
         elif "yolov5" in opt.net:
-            return yolo5(
-                pretrained=opt.pretrained,
+            return yolo5_local(
+                #pretrained=opt.pretrained,
+                pretrained=False,
                 num_classes=self.num_classes,
-                net="yolov5",
+                # net="yolov5",
+                net=opt.net,
                 device=self.device,
             )
         elif "yolov4" in opt.net:
