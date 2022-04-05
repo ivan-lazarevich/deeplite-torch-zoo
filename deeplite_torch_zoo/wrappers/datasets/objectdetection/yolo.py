@@ -140,9 +140,9 @@ DATASET_WRAPPER_FNS = {
     'person_detection': DatasetParameters(1, 320, create_person_detection_datasets),
     'car_detection': DatasetParameters(1, 320, create_car_detection_datasets),
     'person_pet_vehicle_detection': DatasetParameters(3, 320, create_person_pet_vehice_datasets),
-    'coco_three_class': DatasetParameters(3, 320, create_person_pet_vehice_datasets),
-    'coco_eight_class': DatasetParameters(8, 320, create_person_pet_vehice_datasets), 
-    'surveillance_person_class': DatasetParameters(1, 288, create_person_pet_vehice_datasets)
+    'coco_three_class': DatasetParameters(3, 352, create_person_pet_vehice_datasets),
+    'coco_eight_class': DatasetParameters(8, 352, create_person_pet_vehice_datasets), 
+    'surveillance_person_class': DatasetParameters(1, 352, create_person_pet_vehice_datasets)
 }
 
 for dataset_name_key, dataset_parameters in DATASET_WRAPPER_FNS.items():

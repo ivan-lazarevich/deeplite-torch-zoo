@@ -178,6 +178,10 @@ class Trainer(object):
             test_set = opt.img_dir / "VOC2007"
         elif opt.dataset_type == "coco_eight_class":
             test_set = opt.img_dir
+        elif opt.dataset_type == "coco_three_class":
+            test_set = opt.img_dir
+        elif opt.dataset_type == "surveillance_person_class":
+            test_set = opt.img_dir
         elif opt.dataset_type == "coco":
             gt = COCO(opt.img_dir / "annotations/instances_val2017.json")
         elif opt.dataset_type == "car_detection":
@@ -410,7 +414,8 @@ def parse_opt():
         default="voc",
         choices=["coco", "voc", "lisa", "lisa_full",
             "lisa_subset11", "wider_face", "person_detection", "voc07",
-            "car_detection", "person_pet_vehicle_detection", "coco_eight_class", "coco_three_class","surveillance_person_class"],
+            "car_detection", "person_pet_vehicle_detection", 
+            "coco_eight_class", "coco_three_class","surveillance_person_class"],
         help="Name of the dataset to train/validate on",
     )
     parser.add_argument(

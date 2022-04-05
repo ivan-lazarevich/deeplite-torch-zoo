@@ -48,7 +48,7 @@ DATA = {
     "CLASSES_1": ["person"],
     "CLASSES_2": ["car", "person"],
     "CLASSES_3": ["person", "cat", "dog"], 
-    "CLASSES_8": ["person", "bicycle", "car", "motorcycle", "bus", "truck", "cat", "dog"], 
+    "CLASSES_8": ["person", "cat", "dog", "bicycle", "car", "motorcycle", "bus", "truck"], 
     "NUM": 20,
 }
 
