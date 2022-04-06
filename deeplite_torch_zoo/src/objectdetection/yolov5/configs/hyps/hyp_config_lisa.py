@@ -1,24 +1,32 @@
-TEST = {
-    "TEST_IMG_SIZE": 300,
-    "BATCH_SIZE": 1,
-    "NUMBER_WORKERS": 0,
-    "CONF_THRESH": 0.01,
-    "NMS_THRESH": 0.5,
-    "MULTI_SCALE_TEST": False,
-    "FLIP_TEST": False,
+DATA = {
+    "CLASSES": [
+        "speedLimit15",
+        "speedLimit25",
+        "speedLimit30",
+        "speedLimit35",
+        "speedLimit40",
+        "speedLimit45",
+        "speedLimit50",
+        "speedLimit55",
+        "speedLimit65",
+        "truckSpeedLimit55",
+        "speedLimitUrdbl",
+    ],
+    "NUM": 11,
 }
 
+MODEL = {
+    "strides": [8, 16, 32],
+}
+
+TEST = {
+    "conf_thresh": 0.01,
+    "nms_thresh": 0.5,
+}
 
 TRAIN = {
-    # general:
-    "TRAIN_IMG_SIZE": 300,
-    "AUGMENT": True,
-    "MULTI_SCALE_TRAIN": True,
-    "IOU_THRESHOLD_LOSS": 0.5,
-    "NUMBER_WORKERS": 4,
     # optimization:
-    "EPOCHS": 51,
-    "BATCH_SIZE": 8,
+    "epochs": 50,
     "lr0": 1e-4,  # 0.01,  # initial learning rate (SGD=1E-2, Adam=1E-3)
     "lrf": 1e-2,  # 0.2,  # final OneCycleLR learning rate (lr0 * lrf)
     "momentum": 0.937,  # SGD momentum/Adam beta1
