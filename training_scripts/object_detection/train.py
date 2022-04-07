@@ -80,7 +80,8 @@ class Trainer(object):
             model_name=self.model_name,
             batch_size=opt.batch_size,
             num_workers=opt.n_cpu,
-            img_size=self.hyp_config.TRAIN["TRAIN_IMG_SIZE"],
+            # img_size=self.hyp_config.TRAIN["TRAIN_IMG_SIZE"],
+            img_size=320,
         )
 
         self.train_dataloader = dataset_splits["train"]

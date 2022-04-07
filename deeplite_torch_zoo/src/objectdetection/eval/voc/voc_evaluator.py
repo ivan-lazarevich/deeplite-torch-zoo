@@ -46,6 +46,7 @@ class VOCEvaluator(Evaluator):
             self.classes = cfg.DATA["CLASSES_2"]
         elif num_classes == 3:
             self.classes = cfg.DATA["CLASSES_3"]
+            self.all_classes = cfg.DATA["CLASSES_3"]
         elif num_classes == 8:
             self.classes = cfg.DATA["CLASSES_8"]
             self.all_classes = cfg.DATA["CLASSES_8"]
