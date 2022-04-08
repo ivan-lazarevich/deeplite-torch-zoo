@@ -31,7 +31,9 @@ model_urls = {
 }
 
 coco_eight_class_model_urls = {
-    "yolov5_6n_coco_eight_class": "yolov5_6n-coco-8classes_416_320px-12df57bb4f138d6b.pt",
+    "yolov5_6n_relu_coco_eight_class" : "yolov5_6n_relu-coco-8classes_408-320px-731f07f69e743ff8.pt"
+    "yolov5_6n_hswish_coco_eight_class" : "yolov5_6n_hswish-coco-8classes_414-320px-9a5ee213e811096d.pt
+    "yolov5_6n_coco_eight_class" : "yolov5_6n-coco-8classes_420-320px-5039987d5201d987.pt
 }
 
 
